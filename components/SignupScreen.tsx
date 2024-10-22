@@ -1,8 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Task } from 'react-native';
 import axios from 'axios';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-const SignupScreen = ({ navigation }: { navigation: any }) => {
+type RootStackParamList = {
+  Login: undefined;
+  Signup: undefined;
+  Home: undefined;
+  TaskList: { userId: string };
+  TaskDetail: { task: Task };
+  AddTask: { userId: string };
+};
+
+type SignupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Signup'>;
+type SignupScreenRouteProp = RouteProp<RootStackParamList, 'Signup'>;
+
+type Props = {
+  navigation: SignupScreenNavigationProp;
+  route: SignupScreenRouteProp;
+};
+
+const SignupScreen: React.FC<Props> = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
