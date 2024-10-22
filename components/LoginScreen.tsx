@@ -28,7 +28,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connexion</Text>
+      <Text style={styles.title}>ConnexionTest</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
