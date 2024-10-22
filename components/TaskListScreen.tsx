@@ -1,13 +1,14 @@
+// TaskListScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
 import { obtenirTaches } from '../src/api';
-import { Task, RootStackParamList, TaskListScreenNavigationProp, TaskListScreenRouteProp } from '../src/types';
+import { Task, RootStackParamList } from '../src/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
 type Props = {
-  navigation: TaskListScreenNavigationProp;
-  route: TaskListScreenRouteProp;
+  navigation: StackNavigationProp<RootStackParamList, 'TaskList'>; // Typage de navigation
+  route: RouteProp<RootStackParamList, 'TaskList'>; // Typage de route
 };
 
 const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {

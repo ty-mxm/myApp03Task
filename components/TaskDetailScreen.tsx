@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { modifierTache } from '../src/api';
 import { Task, RootStackParamList, TaskDetailScreenNavigationProp, TaskDetailScreenRouteProp } from '../src/types';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
 
 type Props = {
   navigation: TaskDetailScreenNavigationProp;
@@ -19,15 +17,17 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const handleUpdateTask = async () => {
     try {
       await modifierTache(task.ownerId, task.taskId, title, description, isDone);
+      Alert.alert('Succès', 'Tâche mise à jour avec succès !');
       navigation.goBack();
     } catch (error) {
       console.error(error);
+      Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour de la tâche.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Task Detail</Text>
+      <Text style={styles.title}>Détails de la Tâche</Text>
       <TextInput
         style={styles.input}
         value={title}
@@ -38,11 +38,12 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         value={description}
         onChangeText={setDescription}
       />
-      <Button title={isDone ? "Mark as Undone" : "Mark as Done"} onPress={() => setIsDone(!isDone)} />
-      <Button title="Update Task" onPress={handleUpdateTask} />
+      <Button title={isDone ? "Marquer comme non terminé" : "Marquer comme terminé"} onPress={() => setIsDone(!isDone)} />
+      <Button title="Mettre à jour la tâche" onPress={handleUpdateTask} />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

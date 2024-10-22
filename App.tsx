@@ -1,3 +1,4 @@
+// App.tsx ou votre fichier principal
 import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,30 +9,22 @@ import HomeScreen from './components/HomeScreen';
 import TaskListScreen from './components/TaskListScreen';
 import TaskDetailScreen from './components/TaskDetailScreen';
 import AddTaskScreen from './components/AddTaskScreen';
-import { Task } from './src/types';
+import { RootStackParamList } from './src/types';
 
-type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-  Home: undefined;
-  TaskList: { userId: string };
-  TaskDetail: { task: Task };
-  AddTask: { userId: string };
-};
-
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>(); // Utiliser le paramètre de type
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="TaskList" component={TaskListScreen} />
-        <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
-        <Stack.Screen name="AddTask" component={AddTaskScreen} />
-      </Stack.Navigator>
+<Stack.Navigator>
+  <Stack.Screen name="Home" component={HomeScreen} />
+  <Stack.Screen name="AddTask" component={AddTaskScreen} />
+  <Stack.Screen name="TaskList" component={TaskListScreen} />
+  <Stack.Screen name="Login" component={LoginScreen} />
+  <Stack.Screen name="Signup" component={SignupScreen} />
+  <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
+</Stack.Navigator>
+
     </NavigationContainer>
   );
 };
