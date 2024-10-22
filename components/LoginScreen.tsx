@@ -20,14 +20,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       const response = await connexion(email, password);
       console.log(response);
       // Rediriger vers la liste des tâches après une connexion réussie
-      navigation.navigate('TaskList', { userId: response.userId });
+      navigation.navigate('Home');
     } catch (error) {
       console.error(error);
       // Gérer l'erreur (par exemple, afficher un message d'erreur)
       Alert.alert('Erreur', 'Échec de la connexion. Vérifiez vos identifiants.');
     }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Connexion</Text>
