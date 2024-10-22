@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Task } from 'react-native';
-import { addTask } from '../src/api';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { ajouterTache } from '../src/api';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-
-type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-  Home: undefined;
-  TaskList: { userId: string };
-  TaskDetail: { task: Task };
-  AddTask: { userId: string };
-};
-
-type AddTaskScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AddTask'>;
-type AddTaskScreenRouteProp = RouteProp<RootStackParamList, 'AddTask'>;
+import { RootStackParamList, AddTaskScreenNavigationProp, AddTaskScreenRouteProp } from '../src/types';
 
 type Props = {
   navigation: AddTaskScreenNavigationProp;
@@ -28,7 +17,7 @@ const AddTaskScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const handleAddTask = async () => {
     try {
-      await addTask(userId, title, description);
+      await ajouterTache(userId, title, description);
       navigation.goBack();
     } catch (error) {
       console.error(error);

@@ -1,65 +1,102 @@
-import axios from 'axios';
-
 const BASE_URL = 'https://server-1-t93s.onrender.com/api';
 
-export const signup = async (firstName: string, lastName: string, email: string, password: string) => {
+export const inscription = async (prenom: string, nom: string, email: string, motDePasse: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/user/signup`, {
-      firstName,
-      lastName,
-      email,
-      password,
+    const response = await fetch(`${BASE_URL}/user/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName: prenom,
+        lastName: nom,
+        email,
+        password: motDePasse,
+      }),
     });
-    return response.data;
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     throw error;
   }
 };
 
-export const login = async (email: string, password: string) => {
+export const connexion = async (email: string, motDePasse: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/user/login`, {
-      email,
-      password,
+    const response = await fetch(`${BASE_URL}/user/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password: motDePasse,
+      }),
     });
-    return response.data;
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     throw error;
   }
 };
 
-export const addTask = async (userId: string, title: string, description: string) => {
+export const ajouterTache = async (utilisateurId: string, titre: string, description: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/tasks-management/add-task`, {
-      userId,
-      title,
-      description,
+    const response = await fetch(`${BASE_URL}/tasks-management/add-task`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: utilisateurId,
+        title: titre,
+        description,
+      }),
     });
-    return response.data;
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     throw error;
   }
 };
 
-export const getTasks = async (userId: string) => {
+export const obtenirTaches = async (utilisateurId: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tasks-management/get-tasks/${userId}`);
-    return response.data;
+    const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${utilisateurId}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     throw error;
   }
 };
 
-export const updateTask = async (userId: string, taskId: string, title?: string, description?: string, isDone?: boolean) => {
+export const modifierTache = async (utilisateurId: string, tacheId: string, titre?: string, description?: string, estFait?: boolean) => {
   try {
-    const response = await axios.put(`${BASE_URL}/tasks-management/update-task`, {
-      userId,
-      taskId,
-      title,
-      description,
-      isDone,
+    const response = await fetch(`${BASE_URL}/tasks-management/update-task`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: utilisateurId,
+        taskId: tacheId,
+        title: titre,
+        description,
+        isDone: estFait,
+      }),
     });
-    return response.data;
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   } catch (error) {
     throw error;
   }

@@ -9,6 +9,7 @@ import TaskListScreen from './components/TaskListScreen';
 import TaskDetailScreen from './components/TaskDetailScreen';
 import AddTaskScreen from './components/AddTaskScreen';
 import { Task } from './src/types';
+
 type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
@@ -34,4 +35,5 @@ const App = () => {
     </NavigationContainer>
   );
 };
+
 export default App;

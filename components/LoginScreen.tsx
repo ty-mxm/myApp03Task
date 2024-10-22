@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Task } from 'react-native';
-import axios from 'axios';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-
-type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-  Home: undefined;
-  TaskList: { userId: string };
-  TaskDetail: { task: Task };
-  AddTask: { userId: string };
-};
-
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
+import { connexion } from '../src/api';
+import { RootStackParamList, LoginScreenNavigationProp, LoginScreenRouteProp } from '../src/types';
 
 type Props = {
   navigation: LoginScreenNavigationProp;
@@ -27,21 +16,19 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('https://server-1-t93s.onrender.com/api/user/login', {
-        email,
-        password,
-      });
-      console.log(response.data);
-      // Navigate to the home screen or perform other actions
+      const response = await connexion(email, password);
+      console.log(response);
+      // Rediriger vers la liste des tâches après une connexion réussie
+      navigation.navigate('TaskList', { userId: response.userId });
     } catch (error) {
       console.error(error);
-      // Handle error (e.g., show an error message)
+      // Gérer l'erreur (par exemple, afficher un message d'erreur)
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Connexion</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -52,13 +39,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Mot de passe"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Signup" onPress={() => navigation.navigate('Signup')} />
+      <Button title="Se connecter" onPress={handleLogin} />
+      <Button title="S'inscrire" onPress={() => navigation.navigate('Signup')} />
     </View>
   );
 };

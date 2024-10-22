@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Task } from 'react-native';
-import axios from 'axios';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { inscription } from '../src/api';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-
-type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-  Home: undefined;
-  TaskList: { userId: string };
-  TaskDetail: { task: Task };
-  AddTask: { userId: string };
-};
-
-type SignupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Signup'>;
-type SignupScreenRouteProp = RouteProp<RootStackParamList, 'Signup'>;
+import { RootStackParamList, SignupScreenNavigationProp, SignupScreenRouteProp } from '../src/types';
 
 type Props = {
   navigation: SignupScreenNavigationProp;
@@ -22,41 +11,41 @@ type Props = {
 };
 
 const SignupScreen: React.FC<Props> = ({ navigation }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [prenom, setPrenom] = useState('');
+  const [nom, setNom] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [motDePasse, setMotDePasse] = useState('');
 
-  const handleSignup = async () => {
+  const handleInscription = async () => {
     try {
-      const response = await axios.post('https://server-1-t93s.onrender.com/api/user/signup', {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-      console.log(response.data);
-      // Navigate to the login screen or perform other actions
-    } catch (error) {
+      const response = await inscription(prenom, nom, email, motDePasse);
+      console.log(response);
+      // Rediriger vers la page de connexion après une inscription réussie
+      navigation.navigate('Login');
+    } catch (error: any) {
+      if (error.response && error.response.status === 409) {
+        Alert.alert('Erreur', 'Cet email est déjà utilisé. Veuillez en choisir un autre.');
+      } else {
+        Alert.alert('Erreur', 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
+      }
       console.error(error);
-      // Handle error (e.g., show an error message)
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Signup</Text>
+      <Text style={styles.title}>Inscription</Text>
       <TextInput
         style={styles.input}
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
+        placeholder="Prénom"
+        value={prenom}
+        onChangeText={setPrenom}
       />
       <TextInput
         style={styles.input}
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
+        placeholder="Nom"
+        value={nom}
+        onChangeText={setNom}
       />
       <TextInput
         style={styles.input}
@@ -68,13 +57,13 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
+        placeholder="Mot de passe"
+        value={motDePasse}
+        onChangeText={setMotDePasse}
         secureTextEntry
       />
-      <Button title="Signup" onPress={handleSignup} />
-      <Button title="Login" onPress={() => navigation.navigate('Login')} />
+      <Button title="S'inscrire" onPress={handleInscription} />
+      <Button title="Se connecter" onPress={() => navigation.navigate('Login')} />
     </View>
   );
 };

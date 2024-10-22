@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { updateTask } from '../src/api';
-import { Task } from '../src/types';
+import { modifierTache } from '../src/api';
+import { Task, RootStackParamList, TaskDetailScreenNavigationProp, TaskDetailScreenRouteProp } from '../src/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-
-type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-  Home: undefined;
-  TaskList: { userId: string };
-  TaskDetail: { task: Task };
-  AddTask: { userId: string };
-};
-
-type TaskDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TaskDetail'>;
-type TaskDetailScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetail'>;
 
 type Props = {
   navigation: TaskDetailScreenNavigationProp;
@@ -30,7 +18,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const handleUpdateTask = async () => {
     try {
-      await updateTask(task.ownerId, task.taskId, title, description, isDone);
+      await modifierTache(task.ownerId, task.taskId, title, description, isDone);
       navigation.goBack();
     } catch (error) {
       console.error(error);
@@ -55,7 +43,6 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
