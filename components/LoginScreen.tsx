@@ -1,8 +1,9 @@
+// LoginScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { connexion } from '../src/api'; // Importation de la fonction connexion
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { connexion } from '../src/api';
 import { RootStackParamList, LoginScreenNavigationProp, LoginScreenRouteProp } from '../src/types';
 
 type Props = {
@@ -23,12 +24,13 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     } catch (error) {
       console.error(error);
       // Gérer l'erreur (par exemple, afficher un message d'erreur)
+      Alert.alert('Erreur', 'Échec de la connexion. Vérifiez vos identifiants.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ConnexionTest</Text>
+      <Text style={styles.title}>Connexion</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
