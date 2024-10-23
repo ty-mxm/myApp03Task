@@ -108,23 +108,28 @@ export const miseAJourUtilisateur = async (userId: string, prenom: string, nom: 
 
 // Ajouter une nouvelle tâche
 export const ajouterTache = async (userId: string, title: string, description: string) => {
-  const response = await fetch(`${BASE_URL}/tasks-management/add-task`, {
+  try {
+    const response = await fetch(`${BASE_URL}/tasks-management/add-task`, {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-          userId: userId,    // Ensure userId is passed here
-          title: title,      // The title field
-          description: description // The description field
+        userId,
+        title,  // Keep 'title' as it's used in your version
+        description,
       }),
-  });
+    });
 
-  const data = await response.json();
-  if (!response.ok) {
-      throw new Error(`Erreur lors de l'ajout de la tâche: ${data.error}`);
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur lors de l'ajout de la tâche: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
   }
-  return data;
 };
 
 
