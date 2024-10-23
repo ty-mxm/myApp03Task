@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
 import { obtenirTaches } from '../src/api';
 import { Task, RootStackParamList } from '../src/types';
@@ -12,90 +12,110 @@ type Props = {
 };
 
 const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { userId } = route.params; // Get the userId passed from HomeScreen
-  const [taches, setTaches] = useState<Task[]>([]);
+  const { userId } = route.params; // Récupérer l'ID de l'utilisateur
+  const [taches, setTaches] = useState<Task[]>([]); // État pour les tâches
+  const flatListRef = useRef<FlatList>(null); // Référence pour faire défiler la liste
 
+  // Fonction pour obtenir les tâches de l'utilisateur via l'API
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        const data = await obtenirTaches(userId); // Fetch tasks for the correct user
-        setTaches(data.tasks);
+        const data = await obtenirTaches(userId); // Appel API pour obtenir les tâches
+        setTaches(data.tasks); // Mettre à jour l'état avec les tâches récupérées
+        scrollToEnd(); // Faire défiler vers la dernière tâche
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchTaches();
+    fetchTaches(); // Appeler la fonction pour obtenir les tâches à chaque chargement
   }, [userId]);
 
+  // Fonction pour faire défiler jusqu'à la dernière tâche
+  const scrollToEnd = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true }); // Scroller jusqu'à la fin de la liste
+    }
+  };
+
+  // Fonction pour naviguer vers les détails d'une tâche
   const handleTachePress = (tache: Task) => {
     navigation.navigate('TaskDetail', { task: tache });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Liste des Tâches</Text>
-        <FlatList
-          data={taches}
-          keyExtractor={(item) => item.taskId}
-          renderItem={({ item }) => (
-            <View style={styles.taskItem}>
-              <Text>{item.title}</Text>
-              <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
-            </View>
-          )}
-        />
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Ajouter une tâche"
-            onPress={() => navigation.navigate('AddTask', { userId })}
-            color="#ADD8E6"
-          />
-        </View>
-      </View>
+      <Text style={styles.title}>Liste des Tâches</Text>
+      
+      {/* Liste déroulante des tâches avec FlatList */}
+      <FlatList
+        ref={flatListRef} // Référence pour faire défiler
+        data={taches}
+        keyExtractor={(item) => item.taskId}
+        renderItem={({ item }) => (
+          <View style={styles.taskItem}>
+            <Text style={styles.taskTitle}>{item.title}</Text>
+            <Text style={styles.taskDescription}>{item.description}</Text>
+            <Text style={styles.taskDate}>{item.date}</Text>
+            <Text style={styles.taskStatus}>
+              État: {item.isDone ? 'Terminée' : 'En cours'}
+            </Text>
+            <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
+          </View>
+        )}
+        contentContainerStyle={styles.listContent}
+        onContentSizeChange={scrollToEnd} // Défilement automatique lors du changement de contenu
+      />
+      
+      {/* Bouton pour ajouter une nouvelle tâche */}
+      <Button 
+        title="Ajouter une tâche" 
+        onPress={() => navigation.navigate('AddTask', { userId })} 
+        color="#ADD8E6"
+      />
     </View>
   );
 };
 
 // Application des styles
 const styles = StyleSheet.create({
-  // Centrer le contenu de l'écran
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 1, // Utiliser tout l'espace vertical
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#E6E6FA', // Fond violet pastel
   },
-  // Formulaire centré avec un fond blanc et bordures arrondies
-  content: {
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    borderRadius: 10,
-    width: '90%',
-    alignItems: 'center',
-  },
-  // Titre avec une couleur violette douce
   title: {
     fontSize: 24,
     marginBottom: 16,
     color: '#9370DB', // Violet léger pour le titre
   },
-  // Chaque tâche avec un espacement et une bordure en bas
   taskItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column', // Empiler les éléments en colonne
   },
-  // Style des boutons
-  buttonContainer: {
-    marginTop: 20,
-    width: '100%',
-    borderRadius: 5,
-    overflow: 'hidden',
+  taskTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  taskDescription: {
+    fontSize: 14,
+    color: '#555',
+  },
+  taskDate: {
+    fontSize: 12,
+    color: '#888',
+  },
+  taskStatus: {
+    fontSize: 12,
+    color: '#007BFF', // Couleur pour le statut
+  },
+  listContent: {
+    paddingBottom: 20,
+    flexGrow: 1, // Permet à la liste de croître et de défiler
   },
 });
 
