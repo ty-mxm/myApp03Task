@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { modifierTache } from '../src/api';
-import { Task, RootStackParamList, TaskDetailScreenNavigationProp, TaskDetailScreenRouteProp } from '../src/types';
+import { TaskDetailScreenNavigationProp, TaskDetailScreenRouteProp } from '../src/types';
 
 // Déclaration des props pour la navigation
 type Props = {
@@ -11,20 +11,45 @@ type Props = {
 
 const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { task } = route.params;
+  
+  // Log task for debugging (from friend's version)
+  console.log('Task:', task);
+
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [isDone, setIsDone] = useState(task.isDone);
 
   // Fonction de gestion de la mise à jour de la tâche
   const handleUpdateTask = async () => {
+    // Validation: Check for empty fields (from friend's version)
+    if (!title.trim() || !description.trim()) {
+      Alert.alert('Erreur', 'Le titre et la description ne peuvent pas être vides.');
+      return;
+    }
+
     try {
+      // Log data passed to API (from friend's version)
+      console.log('ownerId:', task.ownerId);
+      console.log('taskId:', task.taskId);
+      console.log('title:', title);
+      console.log('description:', description);
+      console.log('isDone:', isDone);
+
       await modifierTache(task.ownerId, task.taskId, title, description, isDone);
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
-      navigation.goBack();
+      // Navigation back to task list after update (as per project instructions)
+      navigation.navigate('TaskList', { userId: task.ownerId });
     } catch (error) {
       console.error(error);
       Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour de la tâche.');
     }
+  };
+
+  // Toggle function for marking task as completed/not completed (from friend's version)
+  const toggleTaskCompletion = () => {
+    setIsDone(prev => !prev);
+    Alert.alert('État modifié', `Tâche ${isDone ? 'non terminée' : 'terminée'}`);
+    handleUpdateTask();
   };
 
   return (
@@ -35,23 +60,25 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           style={styles.input}
           value={title}
           onChangeText={setTitle}
+          placeholder="Titre de la tâche"
         />
         <TextInput
           style={styles.input}
           value={description}
           onChangeText={setDescription}
+          placeholder="Description de la tâche"
         />
 
-        {/* Bouton pour marquer la tâche comme terminée ou non */}
+        {/* Button to toggle task completion */}
         <View style={styles.buttonContainer}>
           <Button
             title={isDone ? "Marquer comme non terminé" : "Marquer comme terminé"}
-            onPress={() => setIsDone(!isDone)}
+            onPress={toggleTaskCompletion}
             color="#ADD8E6"
           />
         </View>
 
-        {/* Bouton pour mettre à jour la tâche */}
+        {/* Button to update task */}
         <View style={styles.buttonContainer}>
           <Button title="Mettre à jour la tâche" onPress={handleUpdateTask} color="#ADD8E6" />
         </View>
@@ -62,14 +89,12 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
 // Application des styles
 const styles = StyleSheet.create({
-  // Centrer le contenu de l'écran
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', // Fond violet pastel
+    backgroundColor: '#E6E6FA',
   },
-  // Formulaire centré avec un fond blanc et bordures arrondies
   form: {
     backgroundColor: '#FFFFFF',
     padding: 20,
@@ -77,13 +102,11 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
-  // Titre avec une couleur violette douce
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Violet léger pour le titre
+    color: '#9370DB',
   },
-  // Champs de texte avec bordures et espacement
   input: {
     height: 40,
     borderColor: 'gray',
@@ -91,14 +114,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingHorizontal: 8,
     width: '100%',
-    borderRadius: 5, // Coins arrondis pour les champs de texte
+    borderRadius: 5,
   },
-  // Style des boutons
   buttonContainer: {
     marginTop: 10,
     width: '100%',
     borderRadius: 5,
-    overflow: 'hidden', // Assure que le bouton a des coins arrondis
+    overflow: 'hidden',
   },
 });
 
