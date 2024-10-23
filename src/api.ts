@@ -142,29 +142,40 @@ export const obtenirTaches = async (userId: any) => {
 
 
 // Modifier une tâche existante
-export const modifierTache = async (utilisateurId: string, tacheId: string, titre?: string, description?: string, estFait?: boolean) => {
+export const modifierTache = async (userId: string, taskId: string, titre?: string, description?: string, estFait?: boolean) => {
   try {
+    // Construction du corps de la requête
+    const body = {
+      userId,
+      taskId,
+      ...(titre && { title: titre }), // Ajoute le titre uniquement s'il existe
+      ...(description && { description }), // Ajoute la description uniquement si elle existe
+      ...(estFait !== undefined && { isDone: estFait }), // Ajoute isDone uniquement s'il est défini
+    };
+
+    // Log du corps de la requête pour le débogage
+    console.log('Request body:', body);
+
+    // Envoi de la requête PUT à l'API
     const response = await fetch(`${BASE_URL}/tasks-management/update-task`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        userId: utilisateurId,
-        taskId: tacheId,
-        title: titre,
-        description,
-        isDone: estFait,
-      }),
+      body: JSON.stringify(body),
     });
 
+    // Vérification de la réponse
     if (!response.ok) {
       const errorMessage = await response.text();
       throw new Error(`Erreur lors de la mise à jour de la tâche: ${errorMessage}`);
     }
 
+    // Retourne la réponse JSON si la requête est réussie
     return await response.json();
   } catch (error) {
+    // Log de l'erreur pour le débogage
+    console.error('Error updating task:', error);
     throw error;
   }
 };
