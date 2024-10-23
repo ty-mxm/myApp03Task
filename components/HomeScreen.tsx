@@ -15,21 +15,29 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Accueil</Text>
-      <Text>Bienvenue sur l'écran d'accueil !</Text>
-      <Button
-        title="Voir les tâches"
-        onPress={() => navigation.navigate('TaskList', { userId })} // Pass userId to TaskListScreen
-      />
-      <Button
-        title="Ajouter une tâche"
-        onPress={() => navigation.navigate('AddTask', { userId })} // Pass userId to AddTaskScreen
-      />
+      <View style={styles.content}>
+        <Text style={styles.title}>Accueil</Text>
+        <Text>Bienvenue sur l'écran d'accueil !</Text>
+        
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Voir les tâches"
+            onPress={() => navigation.navigate('TaskList', { userId })} // Pass userId to TaskListScreen
+            color="#ADD8E6"
+          />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Ajouter une tâche"
+            onPress={() => navigation.navigate('AddTask', { userId })} // Pass userId to AddTaskScreen
+            color="#ADD8E6"
+          />
+        </View>
+      </View>
     </View>
   );
 };
-
-
 
 // Application des styles
 const styles = StyleSheet.create({
@@ -38,7 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', // Fond violet pastel&#8203;:contentReference[oaicite:0]{index=0}
+    backgroundColor: '#E6E6FA', // Fond violet pastel
   },
   // Contenu centré avec un fond blanc et bordures arrondies
   content: {
@@ -52,7 +60,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Violet léger pour le titre&#8203;:contentReference[oaicite:1]{index=1}
+    color: '#9370DB', // Violet léger pour le titre
   },
   // Style des boutons
   buttonContainer: {
