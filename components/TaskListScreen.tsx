@@ -34,22 +34,29 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Liste des Tâches</Text>
-      <FlatList
-        data={taches}
-        keyExtractor={(item) => item.taskId}
-        renderItem={({ item }) => (
-          <View style={styles.taskItem}>
-            <Text>{item.title}</Text>
-            <Button title="Voir" onPress={() => handleTachePress(item)} />
-          </View>
-        )}
-      />
-      <Button title="Ajouter une tâche" onPress={() => navigation.navigate('AddTask', { userId })} />
+      <View style={styles.content}>
+        <Text style={styles.title}>Liste des Tâches</Text>
+        <FlatList
+          data={taches}
+          keyExtractor={(item) => item.taskId}
+          renderItem={({ item }) => (
+            <View style={styles.taskItem}>
+              <Text>{item.title}</Text>
+              <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
+            </View>
+          )}
+        />
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Ajouter une tâche"
+            onPress={() => navigation.navigate('AddTask', { userId })}
+            color="#ADD8E6"
+          />
+        </View>
+      </View>
     </View>
   );
 };
-
 
 // Application des styles
 const styles = StyleSheet.create({
@@ -60,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#E6E6FA', // Fond violet pastel
   },
-  // Contenu centré avec un fond blanc et bordures arrondies
+  // Formulaire centré avec un fond blanc et bordures arrondies
   content: {
     backgroundColor: '#FFFFFF',
     padding: 20,
@@ -85,10 +92,10 @@ const styles = StyleSheet.create({
   },
   // Style des boutons
   buttonContainer: {
-    marginTop: 10,
+    marginTop: 20,
     width: '100%',
     borderRadius: 5,
-    overflow: 'hidden', // Assure que le bouton a des coins arrondis
+    overflow: 'hidden',
   },
 });
 
