@@ -78,6 +78,33 @@ export const changerMotDePasse = async (userId: string, ancienMotDePasse: string
   }
 };
 
+// Mise à jour des informations utilisateur
+export const miseAJourUtilisateur = async (userId: string, prenom: string, nom: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/user/update-user`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        firstName: prenom,
+        lastName: nom,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur lors de la mise à jour des informations utilisateur: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 // Ajouter une nouvelle tâche
 export const ajouterTache = async (userId: string, title: string, description: string) => {
