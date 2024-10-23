@@ -72,7 +72,7 @@ export const ajouterTache = async (taskData: any, title: string, description: st
 
 // Obtenir les tâches d'un utilisateur
 // Exemple de fonction de récupération des tâches
-const obtenirTaches = async (userId: any) => {
+export const obtenirTaches = async (userId: any) => {
   const response = await fetch(`https://server-1-t93s.onrender.com/api/tasks-management/get-tasks/${userId}`);
   const data = await response.json();
   // Gérer les erreurs
