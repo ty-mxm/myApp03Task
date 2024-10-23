@@ -13,7 +13,7 @@ export type Task = {
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
-  Home: undefined;
+  Home: { userId: string };
   TaskList: { userId: string };
   TaskDetail: { task: Task };
   AddTask: { userId: string };

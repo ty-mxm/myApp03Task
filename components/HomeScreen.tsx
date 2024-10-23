@@ -10,23 +10,26 @@ type Props = {
   route: HomeScreenRouteProp;
 };
 
-const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const userId = 'exemple-id-utilisateur'; // Remplacez par l'ID de l'utilisateur connecté
+const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
+  const { userId } = route.params; // Get userId passed from LoginScreen
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Accueil</Text>
-        <Text>Bienvenue sur l'écran d'accueil !</Text>
-        
-        {/* Bouton pour voir les tâches */}
-        <View style={styles.buttonContainer}>
-          <Button title="Voir les tâches" onPress={() => navigation.navigate('TaskList', { userId })} color="#ADD8E6" />
-        </View>
-      </View>
+      <Text style={styles.title}>Accueil</Text>
+      <Text>Bienvenue sur l'écran d'accueil !</Text>
+      <Button
+        title="Voir les tâches"
+        onPress={() => navigation.navigate('TaskList', { userId })} // Pass userId to TaskListScreen
+      />
+      <Button
+        title="Ajouter une tâche"
+        onPress={() => navigation.navigate('AddTask', { userId })} // Pass userId to AddTaskScreen
+      />
     </View>
   );
 };
+
+
 
 // Application des styles
 const styles = StyleSheet.create({

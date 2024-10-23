@@ -18,16 +18,16 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
     try {
-      const response = await connexion(email, password);
-      console.log(response);
-      // Redirection vers la page d'accueil après succès
-      navigation.navigate('Home');
+      const response = await connexion(email, password); // Make API call to log in the user
+      const userId = response.userId; // Assuming the response includes the userId
+      navigation.navigate('Home', { userId }); // Pass userId to HomeScreen
     } catch (error) {
       console.error(error);
-      // Alerte en cas d'erreur de connexion
       Alert.alert('Erreur', 'Échec de la connexion. Vérifiez vos identifiants.');
     }
   };
+  
+  
 
   return (
     // Centrer le formulaire avec Flexbox

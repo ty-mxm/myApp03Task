@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { ajouterTache } from '../src/api';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { Alert } from 'react-native';
 import { RootStackParamList, AddTaskScreenNavigationProp, AddTaskScreenRouteProp } from '../src/types';
 
 // Déclaration des props pour la navigation
@@ -12,15 +13,14 @@ type Props = {
 };
 
 const AddTaskScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { userId } = route.params;
+  const { userId } = route.params; // Get the userId passed from HomeScreen
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  // Fonction de gestion de l'ajout d'une tâche
   const handleAddTask = async () => {
     try {
-      await ajouterTache(userId, title, description);
-      navigation.goBack(); // Retour à l'écran précédent
+      await ajouterTache(userId, title, description); // Use the userId when adding a task
+      navigation.goBack();
     } catch (error) {
       console.error(error);
     }
@@ -28,29 +28,24 @@ const AddTaskScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.form}>
-        <Text style={styles.title}>Ajouter une Tâche</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Titre"
-          value={title}
-          onChangeText={setTitle}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          value={description}
-          onChangeText={setDescription}
-        />
-        
-        {/* Bouton pour ajouter la tâche */}
-        <View style={styles.buttonContainer}>
-          <Button title="Ajouter la Tâche" onPress={handleAddTask} color="#ADD8E6" />
-        </View>
-      </View>
+      <Text>Ajouter une Tâche</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Titre"
+        value={title}
+        onChangeText={setTitle}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+      />
+      <Button title="Ajouter la Tâche" onPress={handleAddTask} />
     </View>
   );
 };
+
 
 // Application des styles
 const styles = StyleSheet.create({

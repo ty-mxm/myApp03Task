@@ -12,13 +12,13 @@ type Props = {
 };
 
 const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { userId } = route.params;
+  const { userId } = route.params; // Get the userId passed from HomeScreen
   const [taches, setTaches] = useState<Task[]>([]);
 
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        const data = await obtenirTaches(userId);
+        const data = await obtenirTaches(userId); // Fetch tasks for the correct user
         setTaches(data.tasks);
       } catch (error) {
         console.error(error);
@@ -28,34 +28,28 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
     fetchTaches();
   }, [userId]);
 
-  // Fonction de gestion du clic sur une tâche
   const handleTachePress = (tache: Task) => {
     navigation.navigate('TaskDetail', { task: tache });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Liste des Tâches</Text>
-        <FlatList
-          data={taches}
-          keyExtractor={(item) => item.taskId}
-          renderItem={({ item }) => (
-            <View style={styles.taskItem}>
-              <Text>{item.title}</Text>
-              <View style={styles.buttonContainer}>
-                <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
-              </View>
-            </View>
-          )}
-        />
-        <View style={styles.buttonContainer}>
-          <Button title="Ajouter une tâche" onPress={() => navigation.navigate('AddTask', { userId })} color="#ADD8E6" />
-        </View>
-      </View>
+      <Text style={styles.title}>Liste des Tâches</Text>
+      <FlatList
+        data={taches}
+        keyExtractor={(item) => item.taskId}
+        renderItem={({ item }) => (
+          <View style={styles.taskItem}>
+            <Text>{item.title}</Text>
+            <Button title="Voir" onPress={() => handleTachePress(item)} />
+          </View>
+        )}
+      />
+      <Button title="Ajouter une tâche" onPress={() => navigation.navigate('AddTask', { userId })} />
     </View>
   );
 };
+
 
 // Application des styles
 const styles = StyleSheet.create({

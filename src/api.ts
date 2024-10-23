@@ -53,13 +53,17 @@ export const connexion = async (email: string, motDePasse: string) => {
 };
 
 // Ajouter une nouvelle tâche
-export const ajouterTache = async (taskData: any, title: string, description: string) => {
+export const ajouterTache = async (userId: string, title: string, description: string) => {
   const response = await fetch('https://server-1-t93s.onrender.com/api/tasks-management/add-task', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify(taskData),
+      body: JSON.stringify({
+          userId: userId,    // Ensure userId is passed here
+          title: title,      // The title field
+          description: description // The description field
+      }),
   });
 
   const data = await response.json();
