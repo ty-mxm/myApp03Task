@@ -52,6 +52,33 @@ export const connexion = async (email: string, motDePasse: string) => {
   }
 };
 
+// Changer le mot de passe
+export const changerMotDePasse = async (userId: string, ancienMotDePasse: string, nouveauMotDePasse: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/user/change-password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        oldPassword: ancienMotDePasse,
+        newPassword: nouveauMotDePasse,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur lors du changement de mot de passe: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 // Ajouter une nouvelle tâche
 export const ajouterTache = async (userId: string, title: string, description: string) => {
   const response = await fetch('https://server-1-t93s.onrender.com/api/tasks-management/add-task', {
