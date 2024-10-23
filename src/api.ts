@@ -134,15 +134,19 @@ export const ajouterTache = async (userId: string, title: string, description: s
 
 
 // Obtenir les tâches d'un utilisateur
-// Exemple de fonction de récupération des tâches
-export const obtenirTaches = async (userId: any) => {
-  const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}`);
-  const data = await response.json();
-  // Gérer les erreurs
-  if (!response.ok) {
-      throw new Error(`Erreur lors de la récupération des tâches: ${data.error}`);
+export const obtenirTaches = async (userId: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}`);
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur lors de la récupération des tâches: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
   }
-  return data;
 };
 
 
