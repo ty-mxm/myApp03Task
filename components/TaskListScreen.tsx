@@ -20,9 +20,10 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        const data = await obtenirTaches(userId); // Appel API pour obtenir les tâches
-        setTaches(data.tasks); // Mettre à jour l'état avec les tâches récupérées
-        scrollToEnd(); // Faire défiler vers la dernière tâche
+        const data = await obtenirTaches(userId);
+        console.log('Tasks fetched:', data.tasks); // Check the fetched tasks
+        setTaches(data.tasks);
+        scrollToEnd(); 
       } catch (error) {
         console.error(error);
       }
