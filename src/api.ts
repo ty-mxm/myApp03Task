@@ -108,7 +108,7 @@ export const miseAJourUtilisateur = async (userId: string, prenom: string, nom: 
 
 // Ajouter une nouvelle tâche
 export const ajouterTache = async (userId: string, title: string, description: string) => {
-  const response = await fetch('https://server-1-t93s.onrender.com/api/tasks-management/add-task', {
+  const response = await fetch(`${BASE_URL}/tasks-management/add-task`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export const ajouterTache = async (userId: string, title: string, description: s
 // Obtenir les tâches d'un utilisateur
 // Exemple de fonction de récupération des tâches
 export const obtenirTaches = async (userId: any) => {
-  const response = await fetch(`https://server-1-t93s.onrender.com/api/tasks-management/get-tasks/${userId}`);
+  const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}`);
   const data = await response.json();
   // Gérer les erreurs
   if (!response.ok) {
