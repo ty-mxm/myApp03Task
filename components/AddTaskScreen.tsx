@@ -22,7 +22,7 @@ const AddTaskScreen: React.FC<Props> = ({ route, navigation }) => {
         Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
         return;
       }
-      await ajouterTache(userId, title, description); // Use the userId when adding a task
+      await ajouterTache(title, description); // Only use title and description
       navigation.goBack();
     } catch (error) {
       console.error(error);
