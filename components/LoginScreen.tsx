@@ -30,7 +30,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       setUser({ firstName, lastName });
   
       // Redirect to TaskListTabs and pass the userId
-      navigation.navigate('TaskListTabs', { userId });
+      navigation.navigate('TaskListTabs', { userId, type: 'mesTaches' });
     } catch (error) {
       console.error(error);
       Alert.alert('Erreur', 'Échec de la connexion. Vérifiez vos identifiants.');

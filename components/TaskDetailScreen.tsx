@@ -29,7 +29,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
 
       const taskType = isDone ? 'archiveTaches' : 'mesTaches';
-      navigation.navigate('TaskList', { userId: task.ownerId, type: taskType });
+      navigation.navigate('TaskListTabs', { userId: task.ownerId, type: taskType });
     } catch (error) {
       console.error(error);
       Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour de la tâche.');

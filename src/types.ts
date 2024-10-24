@@ -15,7 +15,7 @@ export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Home: { userId: string };
-  TaskListTabs: { userId: string };
+  TaskListTabs: { userId: string; type: 'mesTaches' | 'autresTaches' | 'archiveTaches' };
   TaskDetail: { task: Task };
   AddTask: { userId: string };
   TaskList: { userId: string; type: 'mesTaches' | 'autresTaches' | 'archiveTaches' };
