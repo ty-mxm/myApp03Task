@@ -14,22 +14,25 @@ export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Home: { userId: string };
-  TaskList: { userId: string };
+  TaskListTabs: { userId: string };
   TaskDetail: { task: Task };
   AddTask: { userId: string };
+  MesTaches: { userId: string; type: 'mesTaches' };
+  AutresTaches: { userId: string; type: 'autresTaches' };
+  ArchiveesTaches: { userId: string; type: 'archiveTaches' };
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 export type SignupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Signup'>;
 export type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
-export type TaskListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TaskList'>;
+export type TaskListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TaskListTabs'>;
 export type TaskDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TaskDetail'>;
 export type AddTaskScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AddTask'>;
 
 export type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 export type SignupScreenRouteProp = RouteProp<RootStackParamList, 'Signup'>;
 export type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
-export type TaskListScreenRouteProp = RouteProp<RootStackParamList, 'TaskList'>;
+export type TaskListScreenRouteProp = RouteProp<RootStackParamList, 'TaskListTabs'>;
 export type TaskDetailScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetail'>;
 export type AddTaskScreenRouteProp = RouteProp<RootStackParamList, 'AddTask'>;
 

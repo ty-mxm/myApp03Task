@@ -1,79 +1,71 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
-import { obtenirTaches } from '../src/api';
+import { obtenirTaches, obtenirTachesAutres, obtenirTachesArchivees } from '../src/api';
 import { Task, RootStackParamList } from '../src/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
-// Déclaration des props pour la navigation et la route
+// Props type definition
 type Props = {
   navigation: StackNavigationProp<RootStackParamList, 'TaskList'>;
   route: RouteProp<RootStackParamList, 'TaskList'>;
 };
 
 const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { userId } = route.params; // Récupérer l'ID de l'utilisateur
-  const [taches, setTaches] = useState<Task[]>([]); // État pour les tâches
-  const flatListRef = useRef<FlatList>(null); // Référence pour faire défiler la liste
+  const { userId, type } = route.params; // Retrieve userId and type from route params
+  const [taches, setTaches] = useState<Task[]>([]); // Task state
+  const flatListRef = useRef<FlatList>(null); // Reference for scrolling
 
-  // Fonction pour obtenir les tâches de l'utilisateur via l'API
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        const data = await obtenirTaches(userId);
-        console.log('Tasks fetched:', data.tasks); // Check the fetched tasks
-        setTaches(data.tasks);
-        scrollToEnd(); 
+        let data;
+        if (type === 'mesTaches') {
+          data = await obtenirTaches(userId, false);
+        } else if (type === 'autresTaches') {
+          data = await obtenirTachesAutres(false);
+        } else if (type === 'archiveTaches') {
+          data = await obtenirTachesArchivees(true);
+        }
+        setTaches(data.tasks); // Update state with tasks
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchTaches(); // Appeler la fonction pour obtenir les tâches à chaque chargement
-  }, [userId]);
+    fetchTaches(); // Fetch tasks on mount
+  }, [userId, type]);
 
-  // Fonction pour faire défiler jusqu'à la dernière tâche
-  const scrollToEnd = () => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: true }); // Scroller jusqu'à la fin de la liste
-    }
-  };
-
-  // Fonction pour naviguer vers les détails d'une tâche
+  // Navigate to TaskDetail on press
   const handleTachePress = (tache: Task) => {
     navigation.navigate('TaskDetail', { task: tache });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Liste des Tâches</Text>
-      
-      {/* Liste déroulante des tâches avec FlatList */}
-      <FlatList
-        ref={flatListRef} // Référence pour faire défiler
-        data={taches}
-        keyExtractor={(item) => item.taskId}
-        renderItem={({ item }) => (
-          <View style={styles.taskItem}>
-            <Text style={styles.taskTitle}>{item.title}</Text>
-            <Text style={styles.taskDescription}>{item.description}</Text>
-            <Text style={styles.taskDate}>{item.date}</Text>
-            <Text style={styles.taskStatus}>
-              État: {item.isDone ? 'Terminée' : 'En cours'}
-            </Text>
-            <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
-          </View>
-        )}
-        contentContainerStyle={styles.listContent}
-        onContentSizeChange={scrollToEnd} // Défilement automatique lors du changement de contenu
-      />
-      
-      {/* Bouton pour ajouter une nouvelle tâche */}
-      <Button 
-        title="Ajouter une tâche" 
-        onPress={() => navigation.navigate('AddTask', { userId })} 
-        color="#ADD8E6"
-      />
+      <View style={styles.form}>
+        <Text style={styles.title}>Liste des Tâches</Text>
+        <FlatList
+          ref={flatListRef}
+          data={taches}
+          keyExtractor={(item) => item.taskId}
+          renderItem={({ item }) => (
+            <View style={styles.taskItem}>
+              <Text style={styles.taskTitle}>{item.title}</Text>
+              <Text style={styles.taskDescription}>{item.description}</Text>
+              <Text style={styles.taskDate}>{item.date}</Text>
+              <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
+            </View>
+          )}
+        />
+        <View style={styles.buttonContainer}>
+          <Button 
+            title="Ajouter une tâche" 
+            onPress={() => navigation.navigate('AddTask', { userId })} 
+            color="#ADD8E6"
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -81,26 +73,35 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
 // Application des styles
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Utiliser tout l'espace vertical
-    justifyContent: 'flex-start',
+    flex: 1,
+    justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', // Fond violet pastel
+    backgroundColor: '#E6E6FA', // Pastel violet background
+  },
+  form: {
+    backgroundColor: '#FFFFFF', 
+    padding: 20,                
+    borderRadius: 10,           
+    width: '80%',
+    alignItems: 'center',
+    maxHeight: '90%', // Ensure it doesn't overflow on smaller screens
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Violet léger pour le titre
+    color: '#9370DB', // Light violet for the title
   },
   taskItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     width: '100%',
-    flexDirection: 'column', // Empiler les éléments en colonne
+    flexDirection: 'column', 
   },
   taskTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#555',
   },
   taskDescription: {
     fontSize: 14,
@@ -110,13 +111,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-  taskStatus: {
-    fontSize: 12,
-    color: '#007BFF', // Couleur pour le statut
-  },
-  listContent: {
-    paddingBottom: 20,
-    flexGrow: 1, // Permet à la liste de croître et de défiler
+  buttonContainer: {
+    marginTop: 20,
+    width: '100%',
+    borderRadius: 5,
+    overflow: 'hidden',
   },
 });
 

@@ -37,8 +37,12 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
       await modifierTache(task.ownerId, task.taskId, title, description, isDone);
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
-      // Navigation back to task list after update (as per project instructions)
-      navigation.navigate('TaskList', { userId: task.ownerId });
+
+      // Determine the type based on the task status or context
+      const taskType = isDone ? 'archiveTaches' : 'mesTaches';
+
+      // Navigation back to task list after update, with the correct type
+      navigation.navigate('TaskList', { userId: task.ownerId, type: taskType });
     } catch (error) {
       console.error(error);
       Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour de la tâche.');

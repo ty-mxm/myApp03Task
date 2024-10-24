@@ -134,9 +134,9 @@ export const ajouterTache = async (userId: string, title: string, description: s
 
 
 // Obtenir les tâches d'un utilisateur
-export const obtenirTaches = async (userId: string) => {
+export const obtenirTaches = async (userId: string, isDone: boolean) => {
   try {
-    const response = await fetch(`https://server-1-t93s.onrender.com/api/tasks-management/get-tasks/${userId}`);
+    const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}?isDone=${isDone}`);
     
     if (!response.ok) {
       const errorMessage = await response.text();
@@ -148,6 +148,37 @@ export const obtenirTaches = async (userId: string) => {
     throw error;
   }
 };
+
+export const obtenirTachesAutres = async (isDone: boolean) => {
+  try {
+    const response = await fetch(`${BASE_URL}/tasks-management/get-other-users-tasks?isDone=${isDone}`);
+    
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur lors de la récupération des tâches des autres utilisateurs: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const obtenirTachesArchivees = async (isDone: boolean) => {
+  try {
+    const response = await fetch(`${BASE_URL}/tasks-management/get-archived-tasks?isDone=${isDone}`);
+    
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erreur lors de la récupération des tâches archivées: ${errorMessage}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 // Modifier une tâche existante

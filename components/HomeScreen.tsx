@@ -22,7 +22,7 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button
             title="Voir les tâches"
-            onPress={() => navigation.navigate('TaskList', { userId })} // Pass userId to TaskListScreen
+            onPress={() => navigation.navigate('TaskList', { userId, type: 'mesTaches' })} // Pass userId to TaskListScreen
             color="#ADD8E6"
           />
         </View>
