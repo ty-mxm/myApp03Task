@@ -24,7 +24,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     }
 
     try {
-      // Ensure the correct userId and taskId are passed
+      
       await modifierTache(task.taskId, title, description, isDone, task.isOwner); // Pass task.taskId here
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
 
@@ -36,21 +36,21 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     }
   };
 
-  // Toggle function to mark task as completed/not completed
+  
   const toggleTaskCompletion = () => {
     setIsDone(prev => !prev);
     handleUpdateTask();
   };
 
-  // Condition to check if the current user is the owner of the task
-  const isTaskModifiable = task.isOwner; // Check if the user is the owner
+  
+  const isTaskModifiable = task.isOwner; // Vérifie si l'utilisateur est le créateur de la tâche
 
   return (
     <View style={styles.container}>
       <View style={styles.form}>
         <Text style={styles.title}>Détails de la Tâche</Text>
 
-        {/* Input fields only enabled if the user is the owner */}
+        {/* Les champs d'entrée ne sont activés que si l'utilisateur est le créateur */}
         <TextInput
           style={styles.input}
           value={title}
@@ -63,10 +63,10 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           value={description}
           onChangeText={setDescription}
           placeholder="Description de la tâche"
-          editable={isTaskModifiable} // Disable input if not the owner
+          editable={isTaskModifiable} // Désactiver l'entrée si l'utilisateur n'est pas le créateur
         />
 
-        {/* Only show the button to toggle task completion if the task is modifiable */}
+        {/* Afficher uniquement le bouton pour basculer l'état d'achèvement si la tâche est modifiable */}
         {isTaskModifiable && (
           <View style={styles.buttonContainer}>
             <Button
@@ -84,7 +84,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           </View>
         )}
 
-        {/* If the task is not modifiable, show an info message */}
+        {/* Afficher uniquement le bouton de mise à jour de la tâche si l'utilisateur est le créateur  */}
         {!isTaskModifiable && (
           <Text style={styles.infoText}>
             Vous ne pouvez pas modifier cette tâche car elle a été créée par un autre utilisateur.
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginTop: 16,
-    color: '#FF4500', // Red color to indicate info
+    color: '#FF4500', 
     fontSize: 14,
   },
 });

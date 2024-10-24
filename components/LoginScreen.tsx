@@ -4,7 +4,7 @@ import { connexion } from '../src/api';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList, LoginScreenNavigationProp, LoginScreenRouteProp } from '../src/types';
-import { useUser } from './UserContext'; // Use the custom hook instead of accessing UserContext directly
+import { useUser } from './UserContext'; 
 
 // Déclaration des props pour la navigation
 type Props = {
@@ -21,15 +21,15 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
     try {
-      const response = await connexion(email, password); // Response includes user info (userId, firstName, lastName)
+      const response = await connexion(email, password); 
       const userId = response.userId;
       const firstName = response.firstName;
       const lastName = response.lastName;
   
-      // Update the global user context with the user's data
+      
       setUser({ firstName, lastName });
   
-      // Redirect to TaskListTabs and pass the userId
+      // Redirige au TaskListTabs et passe le userId
       navigation.navigate('TaskListTabs', { userId, type: 'mesTaches' });
     } catch (error) {
       console.error(error);
@@ -38,7 +38,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    // Centrer le formulaire avec Flexbox
+    // Centre le formulaire avec Flexbox
     <View style={styles.container}>
       <View style={styles.form}>
         <Text style={styles.title}>Connexion</Text>
@@ -58,7 +58,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
           secureTextEntry
         />
         
-        {/* Vue conteneur pour le style personnalisé des boutons */}
+        {/* View conteneur pour le style personnalisé des boutons */}
         <View style={styles.buttonContainer}>
           <Button title="Se connecter" onPress={handleLogin} color="#ADD8E6" />
         </View>

@@ -11,7 +11,7 @@ type Props = {
 };
 
 const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
-  const { userId } = route.params; // Get userId passed from LoginScreen
+  const { userId } = route.params; // Get userId du LoginScreen
 
   return (
     <View style={styles.container}>
@@ -22,7 +22,7 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button
             title="Voir les tâches"
-            onPress={() => navigation.navigate('TaskList', { userId, type: 'mesTaches' })} // Pass userId to TaskListScreen
+            onPress={() => navigation.navigate('TaskList', { userId, type: 'mesTaches' })} // Pass userId au TaskListScreen
             color="#ADD8E6"
           />
         </View>
@@ -30,7 +30,7 @@ const HomeScreen: React.FC<Props> = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button
             title="Ajouter une tâche"
-            onPress={() => navigation.navigate('AddTask', { userId })} // Pass userId to AddTaskScreen
+            onPress={() => navigation.navigate('AddTask', { userId })} // Pass userId au AddTaskScreen
             color="#ADD8E6"
           />
         </View>
@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#E6E6FA', // Fond violet pastel
   },
-  // Contenu centré avec un fond blanc et bordures arrondies
   content: {
     backgroundColor: '#FFFFFF',
     padding: 20,
@@ -56,7 +55,6 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
-  // Titre avec une couleur violette douce
   title: {
     fontSize: 24,
     marginBottom: 16,

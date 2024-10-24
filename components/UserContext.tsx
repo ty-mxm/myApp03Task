@@ -1,15 +1,15 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-// Define the UserContextProps interface
+// Définir l'interface UserContextProps
 interface UserContextProps {
   user: { firstName: string; lastName: string } | null;
   setUser: (user: { firstName: string; lastName: string }) => void;
 }
 
-// Create the UserContext with default value as undefined
-export const UserContext = createContext<UserContextProps | undefined>(undefined); // Export UserContext
+// Créer le UserContext avec une valeur par défaut définie sur undefined
+export const UserContext = createContext<UserContextProps | undefined>(undefined); // Exporter UserContext
 
-// Create a provider component to wrap your app
+// Créer un composant provider pour encapsuler votre application
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<{ firstName: string; lastName: string } | null>(null);
 
@@ -20,7 +20,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Custom hook to use the UserContext
+// Hook personnalisé pour utiliser le UserContext
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {

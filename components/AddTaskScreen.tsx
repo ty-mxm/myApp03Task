@@ -12,7 +12,7 @@ type Props = {
 };
 
 const AddTaskScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { userId } = route.params; // Get the userId passed from HomeScreen
+  const { userId } = route.params; 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -22,7 +22,7 @@ const AddTaskScreen: React.FC<Props> = ({ route, navigation }) => {
         Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
         return;
       }
-      await ajouterTache(title, description); // Only use title and description
+      await ajouterTache(title, description); 
       navigation.goBack();
     } catch (error) {
       console.error(error);

@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Violet léger pour le titre
+    color: '#9370DB', 
   },
   taskItem: {
     padding: 16,
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   taskOwner: {
     fontSize: 12,
-    color: '#9370DB', // Violet léger pour correspondre au thème général
+    color: '#9370DB', 
     fontStyle: 'italic',
     marginTop: 5,
   },

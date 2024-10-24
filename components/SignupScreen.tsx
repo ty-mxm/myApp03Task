@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', // Fond violet pastel&#8203;:contentReference[oaicite:0]{index=0}
+    backgroundColor: '#E6E6FA', // Fond violet pastel
   },
   // Formulaire centré avec un fond blanc et bordures arrondies
   form: {
@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',        
   },
-  // Titre avec une couleur violette douce
+  
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Violet léger pour le titre&#8203;:contentReference[oaicite:1]{index=1}
+    color: '#9370DB', 
   },
-  // Champs de texte avec bordures et espacement
+  
   input: {
     height: 40,
     borderColor: 'gray',
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingHorizontal: 8,
     width: '100%',          
-    borderRadius: 5,        // Coins arrondis pour les champs de texte&#8203;:contentReference[oaicite:2]{index=2}
+    borderRadius: 5,      
   },
   // Style des boutons
   buttonContainer: {
