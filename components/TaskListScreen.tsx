@@ -4,49 +4,49 @@ import { obtenirTaches } from '../src/api';
 import { Task, RootStackParamList } from '../src/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { useUser } from './UserContext'; // Import useUser to get logged-in user info
+import { useUser } from './UserContext'; // Importer useUser pour obtenir les infos de l'utilisateur connecté
 
-// Props type definition
+// Définition des types de props
 type Props = {
   navigation: StackNavigationProp<RootStackParamList, 'TaskList'>;
   route: RouteProp<RootStackParamList, 'TaskList'>;
 };
 
 const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { userId, type } = route.params; // Retrieve userId and type from route params
-  const [taches, setTaches] = useState<Task[]>([]); // Task state
-  const flatListRef = useRef<FlatList>(null); // Reference for scrolling
+  const { userId, type } = route.params; // Récupérer userId et type depuis les paramètres de la route
+  const [taches, setTaches] = useState<Task[]>([]); // État pour stocker les tâches
+  const flatListRef = useRef<FlatList>(null); // Référence pour le défilement
 
-  // Get the logged-in user's name and last name from the context
+  // Obtenir les informations de l'utilisateur connecté via le contexte
   const { user } = useUser();
 
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        // Fetch all tasks for this user based on their completion status
-        const response = await obtenirTaches(userId, false); // Fetch incomplete tasks
+        // Récupérer toutes les tâches pour cet utilisateur en fonction de leur statut d'achèvement
+        const response = await obtenirTaches(userId, false); // Récupérer les tâches non terminées
         
         let data = [];
 
-        // Filter tasks based on the tab type
+        // Filtrer les tâches en fonction de l'onglet sélectionné
         if (type === 'mesTaches') {
-          data = response.tasks.filter((task: Task) => task.isOwner && !task.isDone); // Show tasks created by the user and not done
+          data = response.tasks.filter((task: Task) => task.isOwner && !task.isDone); // Afficher les tâches créées par l'utilisateur et non terminées
         } else if (type === 'autresTaches') {
-          data = response.tasks.filter((task: Task) => !task.isOwner && !task.isDone); // Show tasks created by others and not done
+          data = response.tasks.filter((task: Task) => !task.isOwner && !task.isDone); // Afficher les tâches créées par d'autres utilisateurs et non terminées
         } else if (type === 'archiveTaches') {
-          data = response.tasks.filter((task: Task) => task.isDone); // Show completed tasks
+          data = response.tasks.filter((task: Task) => task.isDone); // Afficher les tâches terminées
         }
 
-        setTaches(data); // Update state with tasks
+        setTaches(data); // Mettre à jour l'état avec les tâches
       } catch (error) {
         console.error("Erreur lors de la récupération des tâches:", error);
       }
     };
 
-    fetchTaches(); // Fetch tasks on mount
+    fetchTaches(); // Récupérer les tâches au montage
   }, [userId, type]);
 
-  // Navigate to TaskDetail on press
+  // Naviguer vers l'écran TaskDetail lors de la sélection d'une tâche
   const handleTachePress = (tache: Task) => {
     navigation.navigate('TaskDetail', { task: tache });
   };
@@ -54,7 +54,7 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        {/* Display the user's first and last name */}
+        {/* Afficher le prénom et nom de l'utilisateur connecté */}
         {user && (
           <Text style={styles.userInfo}>Vous êtes connecté en tant que: {user.firstName} {user.lastName}</Text>
         )}
@@ -69,6 +69,14 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
               <Text style={styles.taskTitle}>{item.title}</Text>
               <Text style={styles.taskDescription}>{item.description}</Text>
               <Text style={styles.taskDate}>{item.date}</Text>
+
+              {/* Afficher le nom du créateur si la tâche n'appartient pas à l'utilisateur connecté */}
+              {!item.isOwner && (
+                <Text style={styles.taskOwner}>
+                  Créée par: {item.firstName} {item.lastName}
+                </Text>
+              )}
+
               <Button title="Voir" onPress={() => handleTachePress(item)} color="#ADD8E6" />
             </View>
           )}
@@ -91,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', // Pastel violet background
+    backgroundColor: '#E6E6FA', // Fond violet pastel
   },
   form: {
     backgroundColor: '#FFFFFF', 
@@ -99,17 +107,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,           
     width: '80%',
     alignItems: 'center',
-    maxHeight: '90%', // Ensure it doesn't overflow on smaller screens
+    maxHeight: '90%', // S'assurer que le contenu ne dépasse pas sur les petits écrans
   },
   userInfo: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#9370DB', // Light violet for user info
+    color: '#9370DB', // Violet léger pour les infos utilisateur
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Light violet for the title
+    color: '#9370DB', // Violet léger pour le titre
   },
   taskItem: {
     padding: 16,
@@ -130,6 +138,12 @@ const styles = StyleSheet.create({
   taskDate: {
     fontSize: 12,
     color: '#888',
+  },
+  taskOwner: {
+    fontSize: 12,
+    color: '#9370DB', // Violet léger pour correspondre au thème général
+    fontStyle: 'italic',
+    marginTop: 5,
   },
   buttonContainer: {
     marginTop: 20,

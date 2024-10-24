@@ -16,7 +16,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { setUser } = useUser(); // Use the custom hook to access setUser
+  const { setUser } = useUser(); 
 
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
