@@ -17,9 +17,9 @@ export type RootStackParamList = {
   TaskListTabs: { userId: string };
   TaskDetail: { task: Task };
   AddTask: { userId: string };
-  MesTaches: { userId: string; type: 'mesTaches' };
-  AutresTaches: { userId: string; type: 'autresTaches' };
-  ArchiveesTaches: { userId: string; type: 'archiveTaches' };
+  'Mes tâches': { userId: string; type: 'mesTaches' };
+  'Tâches par d\'autres utilisateurs': { userId: string; type: 'autresTaches' };
+  'Tâches archivées': { userId: string; type: 'archiveTaches' };
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;

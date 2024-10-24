@@ -20,27 +20,42 @@ const TaskTabs: React.FC<{ route: RouteProp<RootStackParamList, 'TaskListTabs'> 
   const { userId } = route.params; // Get userId from route params
 
   return (
-    <Tab.Navigator>
-      {/* Mes Tâches */}
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: '#E6E6FA', // Pastel violet background for consistency
+          borderTopWidth: 0,          // Removes the border at the top of the tab bar
+          height: 60,                 // Increases height for a more spacious feel
+        },
+        tabBarLabelStyle: {
+          fontSize: 14,               // Font size for tab labels
+          fontWeight: '600',          // Semi-bold for better readability
+          paddingBottom: 8,           // Adds space between the label and the edge of the tab bar
+        },
+        tabBarActiveTintColor: '#9370DB', // Active tab color (violet)
+        tabBarInactiveTintColor: '#555',  // Inactive tab color (gray)
+      }}
+    >
+      {/* Mes Tâches with Emoji */}
       <Tab.Screen
-        name="MesTaches"
+        name="Mes tâches"
         component={TaskListScreen}
         initialParams={{ userId, type: 'mesTaches' }}
-        options={{ tabBarLabel: 'Mes Tâches' }} // Custom tab label
+        options={{ tabBarLabel: 'Mes tâches 📝 ' }} // Emoji added to the label
       />
-      {/* Autres Tâches */}
+      {/* Autres Tâches with Emoji */}
       <Tab.Screen
-        name="AutresTaches"
+        name="Tâches par d'autres utilisateurs"
         component={TaskListScreen}
         initialParams={{ userId, type: 'autresTaches' }}
-        options={{ tabBarLabel: 'Autres' }} // Custom tab label
+        options={{ tabBarLabel: 'Autres 📋' }} // Emoji added to the label
       />
-      {/* Tâches Archivées */}
+      {/* Tâches Archivées with Emoji */}
       <Tab.Screen
-        name="ArchiveesTaches"
+        name="Tâches archivées"
         component={TaskListScreen}
         initialParams={{ userId, type: 'archiveTaches' }}
-        options={{ tabBarLabel: 'Archivées' }} // Custom tab label
+        options={{ tabBarLabel: 'Archivées 📦' }} // Emoji added to the label
       />
     </Tab.Navigator>
   );
