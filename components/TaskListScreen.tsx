@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
-import { obtenirTaches, obtenirTachesAutres, obtenirTachesArchivees } from '../src/api';
+import { obtenirTaches } from '../src/api';
 import { Task, RootStackParamList } from '../src/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
@@ -19,26 +19,25 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        let data;
+        const response = await obtenirTaches(userId); // Fetch all tasks for this user
+        
+        let data = [];
+
+        // Filter tasks based on the tab type
         if (type === 'mesTaches') {
-          // Fetch tasks where isOwner = true and isDone = false
-          const response = await obtenirTaches(userId, false);
-          data = response.tasks.filter((task: Task) => task.isOwner && !task.isDone);
+          data = response.tasks.filter((task: Task) => task.isOwner && !task.isDone); // Show tasks created by the user and not done
         } else if (type === 'autresTaches') {
-          // Fetch tasks created by other users (isOwner = false)
-          const response = await obtenirTachesAutres();
-          data = response.tasks.filter((task: Task) => !task.isOwner);
+          data = response.tasks.filter((task: Task) => !task.isOwner && !task.isDone); // Show tasks created by others and not done
         } else if (type === 'archiveTaches') {
-          // Fetch tasks where isDone = true (archived tasks)
-          const response = await obtenirTachesArchivees(userId);
-          data = response.tasks.filter((task: Task) => task.isDone);
+          data = response.tasks.filter((task: Task) => task.isDone); // All done tasks, regardless of owner
         }
+
         setTaches(data); // Update state with tasks
       } catch (error) {
-        console.error(error);
+        console.error("Erreur lors de la récupération des tâches:", error);
       }
     };
-  
+
     fetchTaches(); // Fetch tasks on mount
   }, [userId, type]);
 
@@ -76,32 +75,33 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 };
 
+// Application des styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', 
+    backgroundColor: '#E6E6FA', // Pastel violet background
   },
   form: {
-    backgroundColor: '#FFFFFF',
-    padding: 20,
-    borderRadius: 10,
+    backgroundColor: '#FFFFFF', 
+    padding: 20,                
+    borderRadius: 10,           
     width: '80%',
     alignItems: 'center',
-    maxHeight: '90%',
+    maxHeight: '90%', // Ensure it doesn't overflow on smaller screens
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB',
+    color: '#9370DB', // Light violet for the title
   },
   taskItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     width: '100%',
-    flexDirection: 'column',
+    flexDirection: 'column', 
   },
   taskTitle: {
     fontSize: 18,

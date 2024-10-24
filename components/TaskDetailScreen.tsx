@@ -18,19 +18,17 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
   // Fonction de gestion de la mise à jour de la tâche
   const handleUpdateTask = async () => {
-    // Validation: Check for empty fields
     if (!title.trim() || !description.trim()) {
       Alert.alert('Erreur', 'Le titre et la description ne peuvent pas être vides.');
       return;
     }
-
+  
     try {
-      await modifierTache(task.ownerId, task.taskId, title, description, isDone);
+      // Ensure the correct userId and taskId are passed
+      await modifierTache(task.ownerId, task.taskId, title, description, isDone); // Using task.ownerId here
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
-
+  
       const taskType = isDone ? 'archiveTaches' : 'mesTaches';
-
-      // Navigate back to the correct task list after updating
       navigation.navigate('TaskList', { userId: task.ownerId, type: taskType });
     } catch (error) {
       console.error(error);
@@ -45,7 +43,7 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   };
 
   // Condition to check if the current user is the owner of the task
-  const isTaskModifiable = task.isOwner;
+  const isTaskModifiable = task.isOwner; // Check if the user is the owner
 
   return (
     <View style={styles.container}>
@@ -88,7 +86,9 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
         {/* If the task is not modifiable, show an info message */}
         {!isTaskModifiable && (
-          <Text style={styles.infoText}>Vous ne pouvez pas modifier cette tâche car elle a été créée par un autre utilisateur.</Text>
+          <Text style={styles.infoText}>
+            Vous ne pouvez pas modifier cette tâche car elle a été créée par un autre utilisateur.
+          </Text>
         )}
       </View>
     </View>

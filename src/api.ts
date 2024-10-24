@@ -37,7 +37,7 @@ export const connexion = async (email: string, motDePasse: string) => {
       },
       body: JSON.stringify({
         email,
-        password: motDePasse,
+        password: motDePasse, // 'password' key needs to match backend expectations
       }),
     });
 
@@ -62,7 +62,7 @@ export const ajouterTache = async (userId: string, title: string, description: s
       },
       body: JSON.stringify({
         userId,
-        title,  
+        title,
         description,
       }),
     });
@@ -78,54 +78,21 @@ export const ajouterTache = async (userId: string, title: string, description: s
   }
 };
 
-// Obtenir les tâches d'un utilisateur
-export const obtenirTaches = async (userId: string, isDone: boolean) => {
+// Obtenir toutes les tâches d'un utilisateur (My, Other Users', and Archived)
+export const obtenirTaches = async (userId: string) => {
   try {
-    const response = await fetch(`https://server-1-t93s.onrender.com/api/tasks-management/get-tasks/${userId}?isDone=${isDone}`);
+    const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}`);
     
     if (!response.ok) {
       const errorMessage = await response.text();
       throw new Error(`Erreur lors de la récupération des tâches: ${errorMessage}`);
     }
 
-    return await response.json();
+    return await response.json(); // Return all tasks, filtering will be done client-side
   } catch (error) {
     throw error;
   }
 };
-
-// Obtenir les tâches des autres utilisateurs
-export const obtenirTachesAutres = async () => {
-  try {
-    const response = await fetch(`${BASE_URL}/tasks-management/get-other-users-tasks`);
-    
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erreur lors de la récupération des tâches des autres utilisateurs: ${errorMessage}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Obtenir les tâches archivées
-export const obtenirTachesArchivees = async (userId: string) => {
-  try {
-    const response = await fetch(`${BASE_URL}/tasks-management/get-archived-tasks/${userId}`);
-    
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erreur lors de la récupération des tâches archivées: ${errorMessage}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    throw error;
-  }
-};
-
 
 // Modifier une tâche existante
 export const modifierTache = async (userId: string, taskId: string, titre?: string, description?: string, estFait?: boolean) => {
@@ -133,17 +100,20 @@ export const modifierTache = async (userId: string, taskId: string, titre?: stri
     const body = {
       userId,
       taskId,
-      ...(titre && { title: titre }), 
-      ...(description && { description }), 
-      ...(estFait !== undefined && { isDone: estFait }), 
+      ...(titre && { title: titre }),        // Only include title if it's provided
+      ...(description && { description }),   // Only include description if it's provided
+      ...(estFait !== undefined && { isDone: estFait }), // Only include isDone if it's defined
     };
+
+    // Log the request body to check what's being sent
+    console.log('Request body:', body);
 
     const response = await fetch(`${BASE_URL}/tasks-management/update-task`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(body), // Stringify the request body
     });
 
     if (!response.ok) {
