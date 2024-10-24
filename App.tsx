@@ -10,62 +10,61 @@ import TaskDetailScreen from './components/TaskDetailScreen';
 import AddTaskScreen from './components/AddTaskScreen';
 import { RootStackParamList } from './src/types';
 import { RouteProp } from '@react-navigation/native';
-import { UserProvider } from './components/UserContext'; // Import UserProvider to manage global user state
+import { UserProvider } from './components/UserContext'; // Import de UserProvider pour gérer l'état global de l'utilisateur
 
-// Create the Stack and Tab Navigators
+
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-// Task Tabs for different types of tasks
+// Onglets des tâches pour différents types de tâches
 const TaskTabs: React.FC<{ route: RouteProp<RootStackParamList, 'TaskListTabs'> }> = ({ route }) => {
-  const { userId } = route.params; // Get userId from route params
+  const { userId } = route.params; // Récupérer userId à partir des paramètres de la route
 
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: '#E6E6FA', // Pastel violet background for consistency
-          borderTopWidth: 0,          // Removes the border at the top of the tab bar
-          height: 60,                 // Increases height for a more spacious feel
+          backgroundColor: '#E6E6FA', 
+          borderTopWidth: 0,          
+          height: 60,                 
         },
         tabBarLabelStyle: {
-          fontSize: 14,               // Font size for tab labels
-          fontWeight: '600',          // Semi-bold for better readability
-          paddingBottom: 8,           // Adds space between the label and the edge of the tab bar
+          fontSize: 14,               
+          fontWeight: '600',          
+          paddingBottom: 8,           
         },
-        tabBarActiveTintColor: '#9370DB', // Active tab color (violet)
-        tabBarInactiveTintColor: '#555',  // Inactive tab color (gray)
+        tabBarActiveTintColor: '#9370DB', 
+        tabBarInactiveTintColor: '#555',  
       }}
     >
-      {/* Mes Tâches with Emoji */}
+      
       <Tab.Screen
         name="Mes tâches"
         component={TaskListScreen}
         initialParams={{ userId, type: 'mesTaches' }}
-        options={{ tabBarLabel: 'Mes tâches 📝 ' }} // Emoji added to the label
+        options={{ tabBarLabel: 'Mes tâches 📝 ' }} 
       />
-      {/* Autres Tâches with Emoji */}
+      
       <Tab.Screen
         name="Tâches par d'autres utilisateurs"
         component={TaskListScreen}
         initialParams={{ userId, type: 'autresTaches' }}
-        options={{ tabBarLabel: 'Autres 📋' }} // Emoji added to the label
+        options={{ tabBarLabel: 'Autres 📋' }} 
       />
-      {/* Tâches Archivées with Emoji */}
+      
       <Tab.Screen
         name="Tâches archivées"
         component={TaskListScreen}
         initialParams={{ userId, type: 'archiveTaches' }}
-        options={{ tabBarLabel: 'Archivées 📦' }} // Emoji added to the label
+        options={{ tabBarLabel: 'Archivées 📦' }} 
       />
     </Tab.Navigator>
   );
 };
 
-// Main App
 const App = () => {
   return (
-    <UserProvider> {/* Wrap your app in UserProvider */}
+    <UserProvider> 
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Login" component={LoginScreen} />

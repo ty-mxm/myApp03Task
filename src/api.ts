@@ -111,7 +111,7 @@ export const obtenirTaches = async (userId: string, p0: boolean) => {
       throw new Error(`Erreur lors de la récupération des tâches: ${errorMessage}`);
     }
  
-    return await response.json(); // Return all tasks, filtering will be done client-side
+    return await response.json(); 
   } catch (error) {
     throw error;
   }
@@ -146,7 +146,7 @@ export const modifierTache = async (taskId: string, title: string, description: 
         title: title,
         description: description,
         isDone: isDone,
-        isOwner: isOwner,  // Ajout de isOwner ici
+        isOwner: isOwner,  
       }),
     });
  
@@ -198,7 +198,7 @@ export const loadTasks = async (includeCompleted: boolean): Promise<{
       }
     });
  
-    // Sort tasks from newest to oldest based on createdAt
+    // Filtrer les tâches de la plus récente à la plus ancienne par date et heure de création
     activeTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     completedTasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
  
