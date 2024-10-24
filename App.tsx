@@ -10,6 +10,7 @@ import TaskDetailScreen from './components/TaskDetailScreen';
 import AddTaskScreen from './components/AddTaskScreen';
 import { RootStackParamList } from './src/types';
 import { RouteProp } from '@react-navigation/native';
+import { UserProvider } from './components/UserContext'; // Import UserProvider to manage global user state
 
 // Create the Stack and Tab Navigators
 const Stack = createStackNavigator<RootStackParamList>();
@@ -64,16 +65,18 @@ const TaskTabs: React.FC<{ route: RouteProp<RootStackParamList, 'TaskListTabs'> 
 // Main App
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="AddTask" component={AddTaskScreen} />
-        <Stack.Screen name="TaskListTabs" component={TaskTabs} />
-        <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider> {/* Wrap your app in UserProvider */}
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="AddTask" component={AddTaskScreen} />
+          <Stack.Screen name="TaskListTabs" component={TaskTabs} />
+          <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   );
 };
 

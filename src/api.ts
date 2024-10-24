@@ -37,7 +37,7 @@ export const connexion = async (email: string, motDePasse: string) => {
       },
       body: JSON.stringify({
         email,
-        password: motDePasse, // 'password' key needs to match backend expectations
+        password: motDePasse,
       }),
     });
 
@@ -46,6 +46,7 @@ export const connexion = async (email: string, motDePasse: string) => {
       throw new Error(`Erreur lors de la connexion: ${errorMessage}`);
     }
 
+    // This will return user data, including firstName and lastName
     return await response.json();
   } catch (error) {
     throw error;
@@ -79,9 +80,9 @@ export const ajouterTache = async (userId: string, title: string, description: s
 };
 
 // Obtenir toutes les tâches d'un utilisateur (My, Other Users', and Archived)
-export const obtenirTaches = async (userId: string) => {
+export const obtenirTaches = async (userId: string, isDone: boolean) => {
   try {
-    const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}`);
+    const response = await fetch(`${BASE_URL}/tasks-management/get-tasks/${userId}?isDone=${isDone}`);
     
     if (!response.ok) {
       const errorMessage = await response.text();

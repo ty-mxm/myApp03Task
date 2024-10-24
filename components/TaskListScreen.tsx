@@ -4,6 +4,7 @@ import { obtenirTaches } from '../src/api';
 import { Task, RootStackParamList } from '../src/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { useUser } from './UserContext'; // Import useUser to get logged-in user info
 
 // Props type definition
 type Props = {
@@ -16,10 +17,14 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   const [taches, setTaches] = useState<Task[]>([]); // Task state
   const flatListRef = useRef<FlatList>(null); // Reference for scrolling
 
+  // Get the logged-in user's name and last name from the context
+  const { user } = useUser();
+
   useEffect(() => {
     const fetchTaches = async () => {
       try {
-        const response = await obtenirTaches(userId); // Fetch all tasks for this user
+        // Fetch all tasks for this user based on their completion status
+        const response = await obtenirTaches(userId, false); // Fetch incomplete tasks
         
         let data = [];
 
@@ -29,7 +34,7 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
         } else if (type === 'autresTaches') {
           data = response.tasks.filter((task: Task) => !task.isOwner && !task.isDone); // Show tasks created by others and not done
         } else if (type === 'archiveTaches') {
-          data = response.tasks.filter((task: Task) => task.isDone); // All done tasks, regardless of owner
+          data = response.tasks.filter((task: Task) => task.isDone); // Show completed tasks
         }
 
         setTaches(data); // Update state with tasks
@@ -49,6 +54,11 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
+        {/* Display the user's first and last name */}
+        {user && (
+          <Text style={styles.userInfo}>Vous êtes connecté en tant que: {user.firstName} {user.lastName}</Text>
+        )}
+
         <Text style={styles.title}>Liste des Tâches</Text>
         <FlatList
           ref={flatListRef}
@@ -90,6 +100,11 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
     maxHeight: '90%', // Ensure it doesn't overflow on smaller screens
+  },
+  userInfo: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#9370DB', // Light violet for user info
   },
   title: {
     fontSize: 24,

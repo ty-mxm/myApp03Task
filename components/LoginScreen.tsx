@@ -4,6 +4,7 @@ import { connexion } from '../src/api';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList, LoginScreenNavigationProp, LoginScreenRouteProp } from '../src/types';
+import { useUser } from './UserContext'; // Use the custom hook instead of accessing UserContext directly
 
 // Déclaration des props pour la navigation
 type Props = {
@@ -15,11 +16,18 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { setUser } = useUser(); // Use the custom hook to access setUser
+
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
     try {
-      const response = await connexion(email, password); 
-      const userId = response.userId; 
+      const response = await connexion(email, password); // Response includes user info (userId, firstName, lastName)
+      const userId = response.userId;
+      const firstName = response.firstName;
+      const lastName = response.lastName;
+  
+      // Update the global user context with the user's data
+      setUser({ firstName, lastName });
   
       // Redirect to TaskListTabs and pass the userId
       navigation.navigate('TaskListTabs', { userId });
