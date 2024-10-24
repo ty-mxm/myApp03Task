@@ -11,7 +11,7 @@ type Props = {
 
 const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { task } = route.params;
-  
+
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [isDone, setIsDone] = useState(task.isDone);
@@ -22,12 +22,12 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       Alert.alert('Erreur', 'Le titre et la description ne peuvent pas être vides.');
       return;
     }
-  
+
     try {
       // Ensure the correct userId and taskId are passed
-      await modifierTache(task.ownerId, task.taskId, title, description, isDone); // Using task.ownerId here
+      await modifierTache(task.taskId, title, description, isDone, task.isOwner); // Pass task.taskId here
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
-  
+
       const taskType = isDone ? 'archiveTaches' : 'mesTaches';
       navigation.navigate('TaskList', { userId: task.ownerId, type: taskType });
     } catch (error) {
