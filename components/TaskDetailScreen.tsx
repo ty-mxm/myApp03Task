@@ -12,36 +12,25 @@ type Props = {
 const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { task } = route.params;
   
-  // Log task for debugging (from friend's version)
-  console.log('Task:', task);
-
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [isDone, setIsDone] = useState(task.isDone);
 
   // Fonction de gestion de la mise à jour de la tâche
   const handleUpdateTask = async () => {
-    // Validation: Check for empty fields (from friend's version)
+    // Validation: Check for empty fields
     if (!title.trim() || !description.trim()) {
       Alert.alert('Erreur', 'Le titre et la description ne peuvent pas être vides.');
       return;
     }
 
     try {
-      // Log data passed to API (from friend's version)
-      console.log('ownerId:', task.ownerId);
-      console.log('taskId:', task.taskId);
-      console.log('title:', title);
-      console.log('description:', description);
-      console.log('isDone:', isDone);
-
       await modifierTache(task.ownerId, task.taskId, title, description, isDone);
       Alert.alert('Succès', 'Tâche mise à jour avec succès !');
 
-      // Determine the type based on the task status or context
       const taskType = isDone ? 'archiveTaches' : 'mesTaches';
 
-      // Navigation back to task list after update, with the correct type
+      // Navigate back to the correct task list after updating
       navigation.navigate('TaskList', { userId: task.ownerId, type: taskType });
     } catch (error) {
       console.error(error);
@@ -49,43 +38,58 @@ const TaskDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     }
   };
 
-  // Toggle function for marking task as completed/not completed (from friend's version)
+  // Toggle function to mark task as completed/not completed
   const toggleTaskCompletion = () => {
     setIsDone(prev => !prev);
-    Alert.alert('État modifié', `Tâche ${isDone ? 'non terminée' : 'terminée'}`);
     handleUpdateTask();
   };
+
+  // Condition to check if the current user is the owner of the task
+  const isTaskModifiable = task.isOwner;
 
   return (
     <View style={styles.container}>
       <View style={styles.form}>
         <Text style={styles.title}>Détails de la Tâche</Text>
+
+        {/* Input fields only enabled if the user is the owner */}
         <TextInput
           style={styles.input}
           value={title}
           onChangeText={setTitle}
           placeholder="Titre de la tâche"
+          editable={isTaskModifiable} // Disable input if not the owner
         />
         <TextInput
           style={styles.input}
           value={description}
           onChangeText={setDescription}
           placeholder="Description de la tâche"
+          editable={isTaskModifiable} // Disable input if not the owner
         />
 
-        {/* Button to toggle task completion */}
-        <View style={styles.buttonContainer}>
-          <Button
-            title={isDone ? "Marquer comme non terminé" : "Marquer comme terminé"}
-            onPress={toggleTaskCompletion}
-            color="#ADD8E6"
-          />
-        </View>
+        {/* Only show the button to toggle task completion if the task is modifiable */}
+        {isTaskModifiable && (
+          <View style={styles.buttonContainer}>
+            <Button
+              title={isDone ? "Marquer comme non terminé" : "Marquer comme terminé"}
+              onPress={toggleTaskCompletion}
+              color="#ADD8E6"
+            />
+          </View>
+        )}
 
-        {/* Button to update task */}
-        <View style={styles.buttonContainer}>
-          <Button title="Mettre à jour la tâche" onPress={handleUpdateTask} color="#ADD8E6" />
-        </View>
+        {/* Only show the button to update the task if the user is the owner */}
+        {isTaskModifiable && (
+          <View style={styles.buttonContainer}>
+            <Button title="Mettre à jour la tâche" onPress={handleUpdateTask} color="#ADD8E6" />
+          </View>
+        )}
+
+        {/* If the task is not modifiable, show an info message */}
+        {!isTaskModifiable && (
+          <Text style={styles.infoText}>Vous ne pouvez pas modifier cette tâche car elle a été créée par un autre utilisateur.</Text>
+        )}
       </View>
     </View>
   );
@@ -125,6 +129,11 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 5,
     overflow: 'hidden',
+  },
+  infoText: {
+    marginTop: 16,
+    color: '#FF4500', // Red color to indicate info
+    fontSize: 14,
   },
 });
 

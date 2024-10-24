@@ -8,6 +8,7 @@ export type Task = {
   description: string;
   isDone: boolean;
   date: string;
+  isOwner: boolean;
 };
 
 export type RootStackParamList = {
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   TaskListTabs: { userId: string };
   TaskDetail: { task: Task };
   AddTask: { userId: string };
+  TaskList: { userId: string; type: 'mesTaches' | 'autresTaches' | 'archiveTaches' };
   'Mes tâches': { userId: string; type: 'mesTaches' };
   'Tâches par d\'autres utilisateurs': { userId: string; type: 'autresTaches' };
   'Tâches archivées': { userId: string; type: 'archiveTaches' };

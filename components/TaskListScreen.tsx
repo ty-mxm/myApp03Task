@@ -21,18 +21,24 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
       try {
         let data;
         if (type === 'mesTaches') {
-          data = await obtenirTaches(userId, false);
+          // Fetch tasks where isOwner = true and isDone = false
+          const response = await obtenirTaches(userId, false);
+          data = response.tasks.filter((task: Task) => task.isOwner && !task.isDone);
         } else if (type === 'autresTaches') {
-          data = await obtenirTachesAutres(false);
+          // Fetch tasks created by other users (isOwner = false)
+          const response = await obtenirTachesAutres();
+          data = response.tasks.filter((task: Task) => !task.isOwner);
         } else if (type === 'archiveTaches') {
-          data = await obtenirTachesArchivees(true);
+          // Fetch tasks where isDone = true (archived tasks)
+          const response = await obtenirTachesArchivees(userId);
+          data = response.tasks.filter((task: Task) => task.isDone);
         }
-        setTaches(data.tasks); // Update state with tasks
+        setTaches(data); // Update state with tasks
       } catch (error) {
         console.error(error);
       }
     };
-
+  
     fetchTaches(); // Fetch tasks on mount
   }, [userId, type]);
 
@@ -70,33 +76,32 @@ const TaskListScreen: React.FC<Props> = ({ route, navigation }) => {
   );
 };
 
-// Application des styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#E6E6FA', // Pastel violet background
+    backgroundColor: '#E6E6FA', 
   },
   form: {
-    backgroundColor: '#FFFFFF', 
-    padding: 20,                
-    borderRadius: 10,           
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderRadius: 10,
     width: '80%',
     alignItems: 'center',
-    maxHeight: '90%', // Ensure it doesn't overflow on smaller screens
+    maxHeight: '90%',
   },
   title: {
     fontSize: 24,
     marginBottom: 16,
-    color: '#9370DB', // Light violet for the title
+    color: '#9370DB',
   },
   taskItem: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     width: '100%',
-    flexDirection: 'column', 
+    flexDirection: 'column',
   },
   taskTitle: {
     fontSize: 18,
